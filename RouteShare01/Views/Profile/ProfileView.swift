@@ -2,34 +2,35 @@ import SwiftUI
 
 struct ProfileView: View {
     @State private var isLoggedOut = false
+    @State private var showLogoutAlert = false
 
     var body: some View {
         VStack(spacing: 0) {
-            // Custom Header
+            // **Fixed Header with Proper Background**
             ZStack {
-                Rectangle()
-                    .fill(LinearGradient(gradient: Gradient(colors: [AppColors.background.opacity(0.9), AppColors.background]), startPoint: .top, endPoint: .bottom))
-                    .frame(height: 120)
-                    .edgesIgnoringSafeArea(.top)
+                Color(AppColors.background)
+                    .ignoresSafeArea(edges: .top) // Ensure full-width coverage
                 
-                HStack(spacing: 8) {
+                VStack {
                     Image(systemName: "person.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 30, height: 30)
                         .foregroundColor(AppColors.buttonBackground)
-
+                    
                     Text("Profile")
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(AppColors.contentText)
                 }
+                .padding(.top, 40) // Adjusted to align properly with safe area
             }
+            .frame(height: 100)
             .zIndex(1)
-
+            
             ScrollView {
                 VStack(spacing: 20) {
-                    // Profile Card
+                    // **Profile Card**
                     VStack {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
@@ -54,10 +55,10 @@ struct ProfileView: View {
                     .background(AppColors.background)
                     .cornerRadius(15)
                     .shadow(radius: 3)
-                    .padding(.horizontal)
-
-                    // Account Sections
-                    VStack(spacing: 10) {
+                    .padding(.horizontal, 16) // Keep consistent padding
+                    
+                    // **Account Sections**
+                    VStack(spacing: 12) {
                         SectionHeader(title: "Account")
                         AccountOptionRow(icon: "pencil", title: "Edit Profile")
                         AccountOptionRow(icon: "creditcard.fill", title: "Payment Methods")
@@ -68,22 +69,35 @@ struct ProfileView: View {
                         SectionHeader(title: "Settings")
                         AccountOptionRow(icon: "gearshape.fill", title: "Settings")
                     }
-
-                    // Logout Button
-                    Button(action: logoutUser) {
+                    .padding(.horizontal, 16) // Keep uniform padding
+                    
+                    // **Logout Button - Now Centered & Larger**
+                    Button(action: {
+                        showLogoutAlert = true
+                    }) {
                         HStack {
                             Image(systemName: "power")
                                 .foregroundColor(AppColors.buttonText)
                             Text("Logout")
                                 .fontWeight(.bold)
                                 .foregroundColor(AppColors.buttonText)
-                            Spacer()
                         }
                         .padding()
+                        .frame(width: 200) // Adjusted for better positioning
                         .background(AppColors.buttonBackground)
                         .cornerRadius(12)
                         .shadow(radius: 2)
-                        .padding(.horizontal)
+                        .padding(.top, 30) // Added spacing to center it more
+                    }
+                    .alert(isPresented: $showLogoutAlert) {
+                        Alert(
+                            title: Text("Confirm Logout"),
+                            message: Text("Are you sure you want to log out?"),
+                            primaryButton: .destructive(Text("Logout")) {
+                                logoutUser()
+                            },
+                            secondaryButton: .cancel()
+                        )
                     }
                 }
                 .padding(.top, 20)
@@ -101,7 +115,7 @@ struct ProfileView: View {
     }
 }
 
-// Section Header Component
+// **Section Header Component**
 struct SectionHeader: View {
     let title: String
 
@@ -112,11 +126,12 @@ struct SectionHeader: View {
                 .foregroundColor(AppColors.contentText)
             Spacer()
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
+        .padding(.top, 5)
     }
 }
 
-// Account Option Row Component
+// **Account Option Row Component**
 struct AccountOptionRow: View {
     let icon: String
     let title: String
@@ -140,6 +155,6 @@ struct AccountOptionRow: View {
                 .stroke(AppColors.buttonBackground, lineWidth: 1)
         )
         .shadow(radius: 2)
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
     }
 }
