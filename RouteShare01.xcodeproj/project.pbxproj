@@ -35,7 +35,6 @@
 		840DF8B02D6D41F40076F9B7 /* CustomModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8AF2D6D41F40076F9B7 /* CustomModifiers.swift */; };
 		84ABE3162D6E844500443724 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 84ABE3152D6E844500443724 /* Lottie */; };
 		84ABE3182D6E844500443724 /* Lottie-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 84ABE3172D6E844500443724 /* Lottie-Dynamic */; };
-		84ABE31A2D6E84CE00443724 /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84ABE3192D6E84CE00443724 /* LottieView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +65,6 @@
 		840DF8A92D6D114C0076F9B7 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		840DF8AB2D6D115C0076F9B7 /* BottomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabBar.swift; sourceTree = "<group>"; };
 		840DF8AF2D6D41F40076F9B7 /* CustomModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModifiers.swift; sourceTree = "<group>"; };
-		84ABE3192D6E84CE00443724 /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,7 +184,6 @@
 				840DF8972D6D09EF0076F9B7 /* RideCardView.swift */,
 				840DF8A92D6D114C0076F9B7 /* NavigationBar.swift */,
 				840DF8AB2D6D115C0076F9B7 /* BottomTabBar.swift */,
-				84ABE3192D6E84CE00443724 /* LottieView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -315,7 +312,6 @@
 			files = (
 				840DF89C2D6D0A360076F9B7 /* MessagesView.swift in Sources */,
 				840DF8A22D6D0A710076F9B7 /* SearchView.swift in Sources */,
-				84ABE31A2D6E84CE00443724 /* LottieView.swift in Sources */,
 				840DF8A42D6D0A810076F9B7 /* PostRideView.swift in Sources */,
 				840DF8842D6D09210076F9B7 /* FirebaseAuthService.swift in Sources */,
 				840DF8902D6D09920076F9B7 /* Colors.swift in Sources */,
