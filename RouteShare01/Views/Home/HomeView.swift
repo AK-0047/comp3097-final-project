@@ -8,6 +8,8 @@ let sampleRides: [Ride] = [
 ]
 
 struct HomeView: View {
+    @State private var selectedTab = 0  // Track the selected tab
+
     init() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -15,32 +17,36 @@ struct HomeView: View {
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
-    
+
     var body: some View {
-        TabView {
-            HomeContentView()
+        TabView(selection: $selectedTab) {
+            HomeContentView(selectedTab: $selectedTab)
                 .tabItem {
                     Image(systemName: "house.fill")
                     Text("Home")
                 }
+                .tag(0)
             
             SearchView()
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("Search")
                 }
+                .tag(1)
             
             PostRideView()
                 .tabItem {
                     Image(systemName: "plus.circle.fill")
                     Text("Post Trip")
                 }
+                .tag(2)
             
             ProfileView()
                 .tabItem {
                     Image(systemName: "person.fill")
                     Text("Profile")
                 }
+                .tag(3)
         }
         .accentColor(AppColors.buttonBackground)
         .navigationBarBackButtonHidden(true)
@@ -49,33 +55,31 @@ struct HomeView: View {
 }
 
 struct HomeContentView: View {
+    @Binding var selectedTab: Int  // Bind to HomeView's selectedTab
+
     var body: some View {
         VStack(spacing: 0) {
             // Fixed Header
-            ZStack(alignment: .bottom) {
-                Rectangle()
-                    .fill(AppColors.background)
-                    .frame(height: 90)
-                    .shadow(radius: 5)
-                    .edgesIgnoringSafeArea(.top)
-                
+            VStack(spacing: 0) {
                 HStack(spacing: 8) {
                     Image(systemName: "car.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 30, height: 30)
                         .foregroundColor(AppColors.buttonBackground)
-                    
+
                     Text("RouteShare")
                         .font(.title)
                         .fontWeight(.bold)
                         .foregroundColor(AppColors.contentText)
                 }
-                .padding(.bottom, 5)
+                .padding(.top, 20)
+                .padding(.bottom, 10)
             }
             .frame(maxWidth: .infinity)
+            .background(AppColors.background)
             .zIndex(1)
-            
+
             // Scrollable Content
             ScrollView {
                 VStack(spacing: 20) {
@@ -85,15 +89,14 @@ struct HomeContentView: View {
                         .scaledToFit()
                         .frame(height: 180)
                         .cornerRadius(15)
-                        .shadow(radius: 5)
                         .padding(.horizontal)
-                    
+
                     Text("Plan your perfect trip, find trusted rides, and travel with ease.")
                         .font(.body)
                         .foregroundColor(AppColors.contentText.opacity(0.8))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 30)
-                    
+
                     // Featured Trips
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Popular Rides")
@@ -101,26 +104,28 @@ struct HomeContentView: View {
                             .fontWeight(.semibold)
                             .foregroundColor(AppColors.contentText)
                             .padding(.leading)
-                        
+
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                ForEach(sampleRides, id: \..id) { ride in
+                                ForEach(sampleRides, id: \.id) { ride in
                                     RideCardView(ride: ride)
                                 }
                             }
                             .padding(.horizontal)
                         }
                     }
-                    
-                    // Quick Action Buttons
-                    VStack(spacing: 12) {
-                        HStack(spacing: 15) {
-                            CustomButton(title: "Find Rides", action: {})
-                            CustomButton(title: "Offer a Ride", action: {})
+
+                    // Quick Action Buttons (Navigate by Updating Selected Tab)
+                    HStack(spacing: 15) {
+                        CustomButton(title: "Find Rides") {
+                            selectedTab = 1  // Switch to SearchView
                         }
-                        .padding(.horizontal, 20)
+                        CustomButton(title: "Offer a Ride") {
+                            selectedTab = 2  // Switch to PostRideView
+                        }
                     }
-                    
+                    .padding(.horizontal, 20)
+
                     // Travel Tips Section
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Travel Tips")
@@ -128,21 +133,36 @@ struct HomeContentView: View {
                             .fontWeight(.semibold)
                             .foregroundColor(AppColors.contentText)
                             .padding(.leading)
-                        
-                        Text("✅ Always verify the driver's profile before booking.\n✅ Plan your trip ahead to find the best matches.\n✅ Communicate clearly with your driver for a smooth experience.")
-                            .font(.body)
-                            .foregroundColor(AppColors.contentText.opacity(0.8))
-                            .multilineTextAlignment(.leading)
-                            .padding(.horizontal, 20)
+
+                        VStack(alignment: .leading, spacing: 5) {
+                            TravelTipItem(icon: "checkmark.circle.fill", text: "Always verify the driver's profile before booking.")
+                            TravelTipItem(icon: "calendar", text: "Plan your trip ahead to find the best matches.")
+                            TravelTipItem(icon: "message.fill", text: "Communicate clearly with your driver for a smooth experience.")
+                        }
+                        .padding(.horizontal, 20)
                     }
                     .padding(.top, 10)
                 }
-                .background(AppColors.background)
-                .cornerRadius(10)
-                .shadow(radius: 3)
                 .padding(.vertical)
             }
+            .background(AppColors.background)
         }
         .background(AppColors.background.edgesIgnoringSafeArea(.all))
+    }
+}
+
+// Travel Tip Row Component
+struct TravelTipItem: View {
+    let icon: String
+    let text: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundColor(.green)
+            Text(text)
+                .foregroundColor(AppColors.contentText.opacity(0.8))
+                .font(.body)
+        }
     }
 }
