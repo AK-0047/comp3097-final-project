@@ -10,14 +10,8 @@ struct SearchView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Fixed Header
-            ZStack(alignment: .bottom) {
-                Rectangle()
-                    .fill(AppColors.background)
-                    .frame(height: 90)
-                    .shadow(radius: 5)
-                    .edgesIgnoringSafeArea(.top)
-                
+            // **Fixed Header Without Layering**
+            VStack {
                 HStack(spacing: 8) {
                     Image(systemName: "magnifyingglass")
                         .resizable()
@@ -30,12 +24,14 @@ struct SearchView: View {
                         .fontWeight(.bold)
                         .foregroundColor(AppColors.contentText)
                 }
-                .padding(.bottom, 5)
+                .padding(.top, 20)
+                .padding(.bottom, 10)
             }
             .frame(maxWidth: .infinity)
+            .background(AppColors.background)  // Same background color to remove layering
             .zIndex(1)
             
-            // Scrollable Content
+            // **Scrollable Content**
             ScrollView {
                 VStack(spacing: 20) {
                     // Input Fields
@@ -46,7 +42,7 @@ struct SearchView: View {
                         CustomTextField(icon: "mappin.and.ellipse", placeholder: "Enter destination", text: $destination)
                             .frame(maxWidth: 0.85 * UIScreen.main.bounds.width)
                         
-                        // Date Picker Button
+                        // **Date Picker Button**
                         Button(action: {
                             showDatePicker.toggle()
                         }) {
@@ -55,6 +51,7 @@ struct SearchView: View {
                                     .foregroundColor(AppColors.contentText)
                                 Text(dateFormatter(date))
                                     .foregroundColor(AppColors.contentText)
+                                Spacer()
                             }
                             .padding()
                             .frame(maxWidth: 0.85 * UIScreen.main.bounds.width)
@@ -66,9 +63,8 @@ struct SearchView: View {
                             )
                         }
                     }
-                    .padding(.horizontal)
                     
-                    // Search Button
+                    // **Search Button**
                     Button(action: {
                         searchQuery = "\(origin) to \(destination) on \(dateFormatter(date))"
                         showingSearchResults = true  // Triggers navigation
@@ -84,7 +80,7 @@ struct SearchView: View {
                     }
                     .padding(.top, 20)
                     
-                    // Informational Section
+                    // **Informational Section**
                     VStack(alignment: .leading, spacing: 15) {
                         Text("Plan Your Trip Effectively")
                             .font(.title2)
@@ -98,9 +94,10 @@ struct SearchView: View {
                     .padding(.horizontal)
                 }
                 .padding(.vertical)
+                .background(AppColors.background)  // Ensure same background color
             }
         }
-        .background(AppColors.background.edgesIgnoringSafeArea(.all))
+        .background(AppColors.background.edgesIgnoringSafeArea(.all))  // Fix for safe area
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $showingSearchResults) {
             SearchResultsView(searchQuery: searchQuery)
@@ -138,6 +135,7 @@ struct SearchView: View {
     }
 }
 
+// **Reusable InfoRow Component**
 struct InfoRow: View {
     var icon: String
     var text: String
