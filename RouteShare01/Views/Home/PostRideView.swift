@@ -183,9 +183,15 @@ struct PostRideView: View {
     }
     
     private func postRide() {
-        guard !origin.isEmpty, !destination.isEmpty, !price.isEmpty, !seatsAvailable.isEmpty, !vehicleModel.isEmpty, !vehiclePlate.isEmpty, !driverLicense.isEmpty, !contactNumber.isEmpty else {
-            return  // Ensure all fields are filled
+        let newRide = Ride(id: UUID().uuidString, origin: origin, destination: destination, price: price, driverName: "CurrentUser")
+        
+        FirestoreService.shared.addRide(ride: newRide) { result in
+            switch result {
+            case .success:
+                showSuccessDialog = true
+            case .failure(let error):
+                print("Error posting ride: \(error.localizedDescription)")
+            }
         }
-        showSuccessDialog = true
     }
 }
