@@ -1,4 +1,5 @@
 import SwiftUI
+import FirebaseAuth
 
 struct PostRideView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -14,6 +15,7 @@ struct PostRideView: View {
     @State private var additionalNotes: String = ""
     @State private var showDatePicker = false
     @State private var showSuccessDialog = false
+    @State private var errorMessage: String?
     @State private var navigateToHome = false
     
     var body: some View {
@@ -36,7 +38,7 @@ struct PostRideView: View {
                 .padding(.bottom, 10)
             }
             .frame(maxWidth: .infinity)
-            .background(AppColors.background)  // Ensures no layering effect
+            .background(AppColors.background)
             .zIndex(1)
             
             // **Scrollable Content**
@@ -66,7 +68,7 @@ struct PostRideView: View {
                     CustomTextField(icon: "location.fill", placeholder: "Enter origin", text: $origin)
                     CustomTextField(icon: "mappin.and.ellipse", placeholder: "Enter destination", text: $destination)
                     
-                    // **Date Picker Button (Fix Applied)**
+                    // **Date Picker Button**
                     Button(action: { showDatePicker.toggle() }) {
                         HStack {
                             Image(systemName: "calendar")
@@ -126,6 +128,12 @@ struct PostRideView: View {
                         .cornerRadius(12)
                     }
                     .padding(.top, 20)
+                    
+                    if let errorMessage = errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .padding(.top, 5)
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical)
@@ -150,7 +158,6 @@ struct PostRideView: View {
             )
         }
         .sheet(isPresented: $showDatePicker) {
-            // **Fixed Date Picker Modal**
             VStack {
                 Text("Select a Date")
                     .font(.title2)
@@ -183,14 +190,33 @@ struct PostRideView: View {
     }
     
     private func postRide() {
-        let newRide = Ride(id: UUID().uuidString, origin: origin, destination: destination, price: price, driverName: "CurrentUser")
-        
+        guard let userID = Auth.auth().currentUser?.uid,
+              !origin.isEmpty, !destination.isEmpty, !price.isEmpty, !seatsAvailable.isEmpty, !vehicleModel.isEmpty, !vehiclePlate.isEmpty, !driverLicense.isEmpty, !contactNumber.isEmpty else {
+            errorMessage = "Please fill in all fields."
+            return
+        }
+
+        let newRide = Ride(
+            id: UUID().uuidString,
+            origin: origin,
+            destination: destination,
+            date: date,
+            price: price,
+            seatsAvailable: seatsAvailable,
+            vehicleModel: vehicleModel,
+            vehiclePlate: vehiclePlate,
+            driverLicense: driverLicense,
+            contactNumber: contactNumber,
+            additionalNotes: additionalNotes,
+            driverID: userID
+        )
+
         FirestoreService.shared.addRide(ride: newRide) { result in
             switch result {
             case .success:
                 showSuccessDialog = true
             case .failure(let error):
-                print("Error posting ride: \(error.localizedDescription)")
+                errorMessage = error.localizedDescription
             }
         }
     }

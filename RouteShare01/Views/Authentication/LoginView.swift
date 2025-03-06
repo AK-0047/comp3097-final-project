@@ -138,7 +138,7 @@ struct LoginView: View {
     }
     
     private func logIn() {
-        FirebaseAuthService.shared.logIn(email: email, password: password) { result in
+        FirebaseAuthService.shared.loginUser(email: email, password: password) { result in
             switch result {
             case .success:
                 navigateToHome = true
