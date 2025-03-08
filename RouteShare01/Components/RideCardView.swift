@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct RideCardView: View {
-    var ride: Ride  // Accepts a Ride object
+    var ride: Ride
+    @State private var driverName: String = "Loading..." // Placeholder while fetching
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -9,28 +10,43 @@ struct RideCardView: View {
                 VStack(alignment: .leading) {
                     Text("\(ride.origin) → \(ride.destination)")
                         .font(.headline)
-                        .foregroundColor(AppColors.contentText) // Brown text for main info
-                    Text("Driver: \(ride.driverName)")
+                        .foregroundColor(AppColors.contentText)
+
+                    Text("Driver: \(driverName)")  // 🔄 Use fetched name
                         .font(.subheadline)
-                        .foregroundColor(AppColors.contentText.opacity(0.7)) // Slightly subdued brown
+                        .foregroundColor(AppColors.contentText.opacity(0.7))
                 }
                 Spacer()
-                Text(ride.price)
+                Text("\(ride.price)")
                     .font(.headline)
-                    .foregroundColor(AppColors.buttonText) // White text for price label
+                    .foregroundColor(AppColors.buttonText)
                     .padding(8)
-                    .background(AppColors.buttonBackground) // Orange background for price label
+                    .background(AppColors.buttonBackground)
                     .cornerRadius(10)
             }
             .padding()
-            .background(AppColors.background) // Cream card background
+            .background(AppColors.background)
             .cornerRadius(12)
             .shadow(radius: 3)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(AppColors.buttonBackground, lineWidth: 1) // Orange border for differentiation
+                    .stroke(AppColors.buttonBackground, lineWidth: 1)
             )
         }
         .padding(.horizontal)
+        .onAppear {
+            fetchDriverName()
+        }
+    }
+
+    private func fetchDriverName() {
+        FirestoreService.shared.fetchUser(userId: ride.driverID) { result in
+            switch result {
+            case .success(let user):
+                self.driverName = user.fullName
+            case .failure:
+                self.driverName = "Unknown Driver"
+            }
+        }
     }
 }

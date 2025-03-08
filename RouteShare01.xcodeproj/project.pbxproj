@@ -19,7 +19,6 @@
 		840DF88C2D6D097A0076F9B7 /* Ride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF88B2D6D097A0076F9B7 /* Ride.swift */; };
 		840DF88E2D6D09820076F9B7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF88D2D6D09820076F9B7 /* User.swift */; };
 		840DF8902D6D09920076F9B7 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF88F2D6D09920076F9B7 /* Colors.swift */; };
-		840DF8922D6D099D0076F9B7 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8912D6D099D0076F9B7 /* FirebaseService.swift */; };
 		840DF8942D6D09B60076F9B7 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8932D6D09B60076F9B7 /* CustomButton.swift */; };
 		840DF8962D6D09E40076F9B7 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8952D6D09E40076F9B7 /* CustomTextField.swift */; };
 		840DF8982D6D09EF0076F9B7 /* RideCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8972D6D09EF0076F9B7 /* RideCardView.swift */; };
@@ -34,6 +33,7 @@
 		840DF8AA2D6D114C0076F9B7 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8A92D6D114C0076F9B7 /* NavigationBar.swift */; };
 		840DF8AC2D6D115C0076F9B7 /* BottomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8AB2D6D115C0076F9B7 /* BottomTabBar.swift */; };
 		840DF8B02D6D41F40076F9B7 /* CustomModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8AF2D6D41F40076F9B7 /* CustomModifiers.swift */; };
+		84332C2A2D7BAF20006CB2E3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84332C292D7BAF20006CB2E3 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,7 +51,6 @@
 		840DF88B2D6D097A0076F9B7 /* Ride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ride.swift; sourceTree = "<group>"; };
 		840DF88D2D6D09820076F9B7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		840DF88F2D6D09920076F9B7 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		840DF8912D6D099D0076F9B7 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		840DF8932D6D09B60076F9B7 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		840DF8952D6D09E40076F9B7 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		840DF8972D6D09EF0076F9B7 /* RideCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideCardView.swift; sourceTree = "<group>"; };
@@ -66,6 +65,7 @@
 		840DF8A92D6D114C0076F9B7 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		840DF8AB2D6D115C0076F9B7 /* BottomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabBar.swift; sourceTree = "<group>"; };
 		840DF8AF2D6D41F40076F9B7 /* CustomModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModifiers.swift; sourceTree = "<group>"; };
+		84332C292D7BAF20006CB2E3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CE81FFE4A41F03FF1067C72D /* Pods_RouteShare01.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RouteShare01.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -111,6 +111,7 @@
 		840DF8662D6D071B0076F9B7 /* RouteShare01 */ = {
 			isa = PBXGroup;
 			children = (
+				84332C292D7BAF20006CB2E3 /* GoogleService-Info.plist */,
 				840DF8802D6D08DC0076F9B7 /* Resources */,
 				840DF87F2D6D08D30076F9B7 /* Services */,
 				840DF87E2D6D08C60076F9B7 /* ViewModels */,
@@ -205,7 +206,6 @@
 			children = (
 				840DF8AF2D6D41F40076F9B7 /* CustomModifiers.swift */,
 				840DF88F2D6D09920076F9B7 /* Colors.swift */,
-				840DF8912D6D099D0076F9B7 /* FirebaseService.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -320,6 +320,7 @@
 			files = (
 				840DF86F2D6D071C0076F9B7 /* Preview Assets.xcassets in Resources */,
 				840DF86C2D6D071C0076F9B7 /* Assets.xcassets in Resources */,
+				84332C2A2D7BAF20006CB2E3 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,7 +378,6 @@
 				840DF8A42D6D0A810076F9B7 /* PostRideView.swift in Sources */,
 				840DF8842D6D09210076F9B7 /* FirebaseAuthService.swift in Sources */,
 				840DF8902D6D09920076F9B7 /* Colors.swift in Sources */,
-				840DF8922D6D099D0076F9B7 /* FirebaseService.swift in Sources */,
 				840DF8AC2D6D115C0076F9B7 /* BottomTabBar.swift in Sources */,
 				840DF8AA2D6D114C0076F9B7 /* NavigationBar.swift in Sources */,
 				840DF8982D6D09EF0076F9B7 /* RideCardView.swift in Sources */,
@@ -532,6 +532,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"RouteShare01/Preview Content\"";
 				DEVELOPMENT_TEAM = VHM2LAYQG6;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -562,6 +563,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"RouteShare01/Preview Content\"";
 				DEVELOPMENT_TEAM = VHM2LAYQG6;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

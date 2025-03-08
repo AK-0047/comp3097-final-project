@@ -1,7 +1,7 @@
 platform :ios, '13.0'
 
 target 'RouteShare01' do
-  use_frameworks!
+use_frameworks!
 
   # Firebase Pods
   pod 'Firebase/Auth'

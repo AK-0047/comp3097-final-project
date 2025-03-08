@@ -7,6 +7,8 @@ struct SearchView: View {
     @State private var showingSearchResults = false  // Controls navigation
     @State private var searchQuery: String = ""
     @State private var showDatePicker = false  // Controls Date Picker modal
+    @State private var isLoading = false
+    @State private var errorMessage: String?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -28,13 +30,13 @@ struct SearchView: View {
                 .padding(.bottom, 10)
             }
             .frame(maxWidth: .infinity)
-            .background(AppColors.background)  // Same background color to remove layering
+            .background(AppColors.background)  // Ensures same background color to remove layering
             .zIndex(1)
             
             // **Scrollable Content**
             ScrollView {
                 VStack(spacing: 20) {
-                    // Input Fields
+                    // **Input Fields**
                     VStack(spacing: 12) {
                         CustomTextField(icon: "location.fill", placeholder: "Enter origin", text: $origin)
                             .frame(maxWidth: 0.85 * UIScreen.main.bounds.width)
@@ -64,11 +66,20 @@ struct SearchView: View {
                         }
                     }
                     
+                    if let errorMessage = errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .font(.footnote)
+                            .padding(.top, 5)
+                    }
+
+                    if isLoading {
+                        ProgressView("Searching for rides...")
+                            .padding()
+                    }
+                    
                     // **Search Button**
-                    Button(action: {
-                        searchQuery = "\(origin) to \(destination) on \(dateFormatter(date))"
-                        showingSearchResults = true  // Triggers navigation
-                    }) {
+                    Button(action: searchRides) {
                         Text("Search")
                             .font(.headline)
                             .foregroundColor(AppColors.buttonText)
@@ -79,6 +90,8 @@ struct SearchView: View {
                             .shadow(radius: 3)
                     }
                     .padding(.top, 20)
+                    .disabled(origin.isEmpty || destination.isEmpty)
+                    .opacity(origin.isEmpty || destination.isEmpty ? 0.6 : 1.0)
                     
                     // **Informational Section**
                     VStack(alignment: .leading, spacing: 15) {
@@ -100,7 +113,7 @@ struct SearchView: View {
         .background(AppColors.background.edgesIgnoringSafeArea(.all))  // Fix for safe area
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $showingSearchResults) {
-            SearchResultsView(searchQuery: searchQuery)
+            SearchResultsView(searchQuery: searchQuery, origin: origin, destination: destination, date: date)
         }
         .sheet(isPresented: $showDatePicker) {
             VStack {
@@ -128,6 +141,35 @@ struct SearchView: View {
         }
     }
     
+    private func searchRides() {
+        isLoading = true
+        errorMessage = nil
+        
+        FirestoreService.shared.fetchAllRides { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let allRides):
+                    // **Filter Rides Based on User Input**
+                    let filteredRides = allRides.filter { ride in
+                        return ride.origin.lowercased() == origin.lowercased() &&
+                               ride.destination.lowercased() == destination.lowercased() &&
+                               Calendar.current.isDate(ride.date, inSameDayAs: date)
+                    }
+                    
+                    if filteredRides.isEmpty {
+                        errorMessage = "No rides found for this route."
+                    } else {
+                        searchQuery = "\(origin) to \(destination) on \(dateFormatter(date))"
+                        showingSearchResults = true
+                    }
+                case .failure(let error):
+                    errorMessage = "Error fetching rides: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
     private func dateFormatter(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, yyyy"
