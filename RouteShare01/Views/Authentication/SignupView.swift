@@ -40,11 +40,6 @@ struct SignupView: View {
                         .keyboardType(.phonePad)
                     CustomTextField(icon: "lock.fill", placeholder: "Password", text: $password, isSecure: true)
                     CustomTextField(icon: "lock.fill", placeholder: "Confirm Password", text: $confirmPassword, isSecure: true)
-
-                    // **Driver Details (Optional)**
-//                    CustomTextField(icon: "doc.text.fill", placeholder: "Driver's License (Optional)", text: $driverLicense)
-//                    CustomTextField(icon: "car.fill", placeholder: "Vehicle Model (Optional)", text: $vehicleModel)
-//                    CustomTextField(icon: "number.circle.fill", placeholder: "License Plate (Optional)", text: $vehiclePlate)
                 }
                 .padding(.horizontal)
 

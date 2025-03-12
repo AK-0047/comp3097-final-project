@@ -18,9 +18,3 @@ struct CustomButton: View {
         }
     }
 }
-
-#Preview {
-    CustomButton(title: "Hello, World!", action: {})
-        .padding()
-        .background(AppColors.background)
-}
