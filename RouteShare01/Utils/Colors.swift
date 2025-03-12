@@ -12,6 +12,9 @@ struct AppColors {
     
     /// White for button text
     static let buttonText = Color(hex: "#FFFFFF")
+    
+    static let accentColor = Color(hex: "#FF9500")
+
 }
 
 extension Color {

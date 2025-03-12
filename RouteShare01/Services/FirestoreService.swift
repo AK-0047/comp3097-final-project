@@ -54,31 +54,14 @@ class FirestoreService {
     }
     
 
-    // **✅ Save Ride to Firestore**
-    func addRide(ride: [String: Any], completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let rideID = ride["id"] as? String else {
-            completion(.failure(NSError(domain: "", code: 400, userInfo: [NSLocalizedDescriptionKey: "No ID in ride dictionary"])))
-            return
-        }
-        
-        db.collection("rides").document(rideID).setData(ride) { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
-            }
-        }
-    }
-//    func addRide(ride: Ride, completion: @escaping (Result<Void, Error>) -> Void) {
-//        guard let userID = Auth.auth().currentUser?.uid else {
-//            completion(.failure(NSError(domain: "", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])))
+//    // **✅ Save Ride to Firestore**
+//    func addRide(ride: [String: Any], completion: @escaping (Result<Void, Error>) -> Void) {
+//        guard let rideID = ride["id"] as? String else {
+//            completion(.failure(NSError(domain: "", code: 400, userInfo: [NSLocalizedDescriptionKey: "No ID in ride dictionary"])))
 //            return
 //        }
-//
-//        var rideData = ride.dictionary
-//        rideData["driverID"] = userID // Ensure driverID is set correctly
-//
-//        db.collection("rides").document(ride.id).setData(rideData) { error in
+//        
+//        db.collection("rides").document(rideID).setData(ride) { error in
 //            if let error = error {
 //                completion(.failure(error))
 //            } else {
@@ -86,8 +69,45 @@ class FirestoreService {
 //            }
 //        }
 //    }
+    
+    func addRide(rideData: [String: Any], completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let rideID = rideData["id"] as? String else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Ride ID missing"])))
+            return
+        }
 
+        db.collection("rides").document(rideID).setData(rideData) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+
+    
     // **✅ Fetch All Rides**
+//    func fetchAllRides(completion: @escaping (Result<[Ride], Error>) -> Void) {
+//        db.collection("rides").getDocuments { snapshot, error in
+//            if let error = error {
+//                completion(.failure(error))
+//                return
+//            }
+//            
+//            guard let documents = snapshot?.documents else {
+//                completion(.success([])) // No data case
+//                return
+//            }
+//            
+//            let rides: [Ride] = documents.compactMap { doc in
+//                let data = doc.data()
+//                return Ride(id: doc.documentID, data: data)
+//            }
+//            
+//            completion(.success(rides))
+//        }
+//    }
+    
     func fetchAllRides(completion: @escaping (Result<[Ride], Error>) -> Void) {
         db.collection("rides").getDocuments { snapshot, error in
             if let error = error {
@@ -96,7 +116,7 @@ class FirestoreService {
             }
             
             guard let documents = snapshot?.documents else {
-                completion(.success([])) // No data case
+                completion(.success([])) // No rides found
                 return
             }
             
@@ -108,36 +128,74 @@ class FirestoreService {
             completion(.success(rides))
         }
     }
+
+    
+//    func fetchRidesMatching(origin: String, destination: String, date: Date, completion: @escaping (Result<[Ride], Error>) -> Void) {
+//            db.collection("rides")
+//                .whereField("origin", isEqualTo: origin)
+//                .whereField("destination", isEqualTo: destination)
+//                .getDocuments { snapshot, error in
+//                    if let error = error {
+//                        completion(.failure(error))
+//                        return
+//                    }
+//
+//                    guard let documents = snapshot?.documents else {
+//                        completion(.success([])) // No rides found
+//                        return
+//                    }
+//
+//                    let rides: [Ride] = documents.compactMap { doc in
+//                        let data = doc.data()
+//                        let ride = Ride(id: doc.documentID, data: data)
+//
+//                        // **Filter by Date**
+//                        if let ride = ride, Calendar.current.isDate(ride.date, inSameDayAs: date) {
+//                            return ride
+//                        }
+//                        return nil
+//                    }
+//
+//                    completion(.success(rides))
+//                }
+//        }
     
     func fetchRidesMatching(origin: String, destination: String, date: Date, completion: @escaping (Result<[Ride], Error>) -> Void) {
-            db.collection("rides")
-                .whereField("origin", isEqualTo: origin)
-                .whereField("destination", isEqualTo: destination)
-                .getDocuments { snapshot, error in
-                    if let error = error {
-                        completion(.failure(error))
-                        return
+        db.collection("rides")
+            .whereField("origin", isEqualTo: origin)
+            .whereField("destination", isEqualTo: destination)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+
+                guard let documents = snapshot?.documents else {
+                    completion(.success([])) // No rides found
+                    return
+                }
+
+                let rides: [Ride] = documents.compactMap { doc in
+                    let data = doc.data()
+                    guard let ride = Ride(id: doc.documentID, data: data) else {
+                        return nil // Skip invalid ride objects
                     }
 
-                    guard let documents = snapshot?.documents else {
-                        completion(.success([])) // No rides found
-                        return
-                    }
-
-                    let rides: [Ride] = documents.compactMap { doc in
-                        let data = doc.data()
-                        let ride = Ride(id: doc.documentID, data: data)
-
-                        // **Filter by Date**
-                        if let ride = ride, Calendar.current.isDate(ride.date, inSameDayAs: date) {
+                    // **Fix: Ensure date is correctly compared** ✅
+                    if let firestoreTimestamp = data["date"] as? Timestamp {
+                        let rideDate = firestoreTimestamp.dateValue()
+                        if Calendar.current.isDate(rideDate, inSameDayAs: date) {
                             return ride
                         }
-                        return nil
                     }
 
-                    completion(.success(rides))
+                    return nil
                 }
-        }
+
+                completion(.success(rides))
+            }
+    }
+
 
     
     // **✅ Fetch Rides by User (For Profile Page)**

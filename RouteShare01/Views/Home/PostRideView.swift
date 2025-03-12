@@ -1,5 +1,6 @@
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestore
 
 struct PostRideView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -197,12 +198,14 @@ struct PostRideView: View {
             errorMessage = "Please fill in all required fields."
             return
         }
+        
+        let firestoreTimestamp = Timestamp(date: date)
 
         let newRideData: [String: Any] = [
                 "id": UUID().uuidString,
                 "origin": origin,
                 "destination": destination,
-                "date": date,
+                "date": firestoreTimestamp,
                 "price": Double(price) ?? 0.0,
                 "seatsAvailable": Int(seatsAvailable) ?? 0,
                 "driverID": userID,
@@ -213,7 +216,7 @@ struct PostRideView: View {
                 "additionalNotes": additionalNotes
             ]
             
-            FirestoreService.shared.addRide(ride: newRideData) { result in
+            FirestoreService.shared.addRide(rideData: newRideData) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success:
@@ -224,6 +227,7 @@ struct PostRideView: View {
                 }
             }
     }
+
 }
 
 // **Reusable Section Title**

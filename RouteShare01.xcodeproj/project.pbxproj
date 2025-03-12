@@ -14,8 +14,6 @@
 		840DF8822D6D09060076F9B7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8812D6D09060076F9B7 /* Constants.swift */; };
 		840DF8842D6D09210076F9B7 /* FirebaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8832D6D09210076F9B7 /* FirebaseAuthService.swift */; };
 		840DF8862D6D09320076F9B7 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8852D6D09320076F9B7 /* FirestoreService.swift */; };
-		840DF8882D6D09470076F9B7 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8872D6D09470076F9B7 /* AuthViewModel.swift */; };
-		840DF88A2D6D09550076F9B7 /* RideViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF8892D6D09550076F9B7 /* RideViewModel.swift */; };
 		840DF88C2D6D097A0076F9B7 /* Ride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF88B2D6D097A0076F9B7 /* Ride.swift */; };
 		840DF88E2D6D09820076F9B7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF88D2D6D09820076F9B7 /* User.swift */; };
 		840DF8902D6D09920076F9B7 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DF88F2D6D09920076F9B7 /* Colors.swift */; };
@@ -46,8 +44,6 @@
 		840DF8812D6D09060076F9B7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		840DF8832D6D09210076F9B7 /* FirebaseAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthService.swift; sourceTree = "<group>"; };
 		840DF8852D6D09320076F9B7 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
-		840DF8872D6D09470076F9B7 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
-		840DF8892D6D09550076F9B7 /* RideViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideViewModel.swift; sourceTree = "<group>"; };
 		840DF88B2D6D097A0076F9B7 /* Ride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ride.swift; sourceTree = "<group>"; };
 		840DF88D2D6D09820076F9B7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		840DF88F2D6D09920076F9B7 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -114,7 +110,6 @@
 				84332C292D7BAF20006CB2E3 /* GoogleService-Info.plist */,
 				840DF8802D6D08DC0076F9B7 /* Resources */,
 				840DF87F2D6D08D30076F9B7 /* Services */,
-				840DF87E2D6D08C60076F9B7 /* ViewModels */,
 				840DF87D2D6D08BC0076F9B7 /* Models */,
 				840DF87C2D6D08B50076F9B7 /* Utils */,
 				840DF87B2D6D08AA0076F9B7 /* Components */,
@@ -217,15 +212,6 @@
 				840DF88D2D6D09820076F9B7 /* User.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		840DF87E2D6D08C60076F9B7 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				840DF8872D6D09470076F9B7 /* AuthViewModel.swift */,
-				840DF8892D6D09550076F9B7 /* RideViewModel.swift */,
-			);
-			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		840DF87F2D6D08D30076F9B7 /* Services */ = {
@@ -382,12 +368,10 @@
 				840DF8AA2D6D114C0076F9B7 /* NavigationBar.swift in Sources */,
 				840DF8982D6D09EF0076F9B7 /* RideCardView.swift in Sources */,
 				840DF88C2D6D097A0076F9B7 /* Ride.swift in Sources */,
-				840DF88A2D6D09550076F9B7 /* RideViewModel.swift in Sources */,
 				840DF8862D6D09320076F9B7 /* FirestoreService.swift in Sources */,
 				840DF89E2D6D0A480076F9B7 /* SearchResultsView.swift in Sources */,
 				840DF8A02D6D0A670076F9B7 /* HomeView.swift in Sources */,
 				840DF89A2D6D0A230076F9B7 /* ProfileView.swift in Sources */,
-				840DF8882D6D09470076F9B7 /* AuthViewModel.swift in Sources */,
 				840DF8962D6D09E40076F9B7 /* CustomTextField.swift in Sources */,
 				840DF8A62D6D0A900076F9B7 /* LoginView.swift in Sources */,
 				840DF88E2D6D09820076F9B7 /* User.swift in Sources */,
