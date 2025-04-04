@@ -349,356 +349,108 @@ struct SearchView: View {
     
     var body: some View {
         ZStack {
-            // Background gradient
-            LinearGradient(
-                gradient: Gradient(colors: [AppColors.background.opacity(0.9), AppColors.background]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .edgesIgnoringSafeArea(.all)
+            // Background
+            AppColors.background
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Hero header with animated wave effect
-                ZStack {
-                    // Layered wave shapes for depth
-                    WaveShape(amplitude: 40, frequency: 0.9)
-                        .fill(AppColors.buttonBackground.opacity(0.7))
-                        .frame(height: 160)
-                        .edgesIgnoringSafeArea(.top)
-                    
-                    WaveShape(amplitude: 30, frequency: 1.1)
-                        .fill(AppColors.buttonBackground)
-                        .frame(height: 150)
-                        .edgesIgnoringSafeArea(.top)
-                    
-                    // Header content
-                    VStack(spacing: 12) {
-                        Text("Find a Ride")
-                            .font(.system(size: 32, weight: .bold))
-                            .foregroundColor(AppColors.buttonText)
-                            .shadow(color: Color.black.opacity(0.4), radius: 2, x: 0, y: 2)
-                        
-                        Text("Where would you like to go today?")
-                            .font(.system(size: 16))
-                            .foregroundColor(AppColors.buttonText.opacity(0.85))
-                    }
-                    .padding(.top, 50)
-                }
-                .frame(height: 160)
+                // Header with fixed height
+                HeaderView()
+                    .frame(height: 220)
                 
-                // Main Content in a card
-                VStack {
-                    ScrollView {
-                        VStack(spacing: 25) {
-                            // Search card
-                            VStack(spacing: 20) {
-                                // Origin-Destination connector visual
-                                HStack(alignment: .top, spacing: 15) {
-                                    // Vertical connectors
-                                    VStack(spacing: 0) {
-                                        Circle()
-                                            .fill(AppColors.buttonBackground)
-                                            .frame(width: 14, height: 14)
-                                        
-                                        Rectangle()
-                                            .fill(AppColors.buttonBackground.opacity(0.5))
-                                            .frame(width: 2, height: 42)
-                                        
-                                        Circle()
-                                            .fill(AppColors.buttonBackground)
-                                            .frame(width: 14, height: 14)
-                                    }
-                                    .padding(.top, 12)
-                                    .padding(.leading, 20)
+                // Main content
+                ScrollView {
+                    VStack(spacing: 25) {
+                        // Search card
+                        SearchCard(
+                            origin: $origin,
+                            destination: $destination,
+                            date: $date,
+                            showDatePicker: $showDatePicker,
+                            isLoading: $isLoading,
+                            errorMessage: $errorMessage,
+                            searchRides: searchRides,
+                            dateFormatter: dateFormatter
+                        )
+                        .padding(.horizontal, 20)
+                        .padding(.top, -60) // Overlap with header
+                        
+                        // Rideshare Benefits section
+                        VStack(alignment: .leading, spacing: 20) {
+                            // Section title
+                            HStack {
+                                ZStack {
+                                    Circle()
+                                        .fill(AppColors.buttonBackground.opacity(0.2))
+                                        .frame(width: 40, height: 40)
                                     
-                                    // Fields
-                                    VStack(spacing: 18) {
-                                        // Origin field
-                                        TextField("Where from?", text: $origin)
-                                            .font(.system(size: 17))
-                                            .foregroundColor(AppColors.contentText)
-                                            .padding(.vertical, 15)
-                                            .padding(.horizontal, 20)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .fill(AppColors.buttonText)
-                                                    .shadow(color: Color.black.opacity(0.06), radius: 4, x: 0, y: 2)
-                                            )
-                                        
-                                        // Destination field
-                                        TextField("Where to?", text: $destination)
-                                            .font(.system(size: 17))
-                                            .foregroundColor(AppColors.contentText)
-                                            .padding(.vertical, 15)
-                                            .padding(.horizontal, 20)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .fill(AppColors.buttonText)
-                                                    .shadow(color: Color.black.opacity(0.06), radius: 4, x: 0, y: 2)
-                                            )
-                                    }
-                                    .padding(.trailing, 20)
+                                    Image(systemName: "sparkles")
+                                        .foregroundColor(AppColors.buttonBackground)
                                 }
                                 
-                                // Date selection button with enhanced design
-                                Button(action: {
-                                    showDatePicker.toggle()
-                                }) {
-                                    HStack {
-                                        Image(systemName: "calendar")
-                                            .font(.system(size: 18))
-                                            .foregroundColor(AppColors.buttonBackground)
-                                            .padding(.leading, 20)
-                                        
-                                        Text(dateFormatter(date))
-                                            .font(.system(size: 17))
-                                            .foregroundColor(AppColors.contentText)
-                                            .padding(.vertical, 15)
-                                            .padding(.leading, 10)
-                                        
-                                        Spacer()
-                                        
-                                        Image(systemName: "chevron.down")
-                                            .foregroundColor(AppColors.buttonBackground)
-                                            .padding(.trailing, 20)
-                                    }
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(AppColors.buttonText)
-                                            .shadow(color: Color.black.opacity(0.06), radius: 4, x: 0, y: 2)
-                                    )
-                                    .padding(.horizontal, 20)
-                                }
-                                
-                                if let errorMessage = errorMessage {
-                                    Text(errorMessage)
-                                        .foregroundColor(.red)
-                                        .font(.system(size: 14))
-                                        .padding(.top, 5)
-                                        .padding(.horizontal, 20)
-                                }
-                                
-                                if isLoading {
-                                    HStack(spacing: 10) {
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: AppColors.buttonBackground))
-                                        Text("Searching for rides...")
-                                            .foregroundColor(AppColors.contentText)
-                                            .font(.system(size: 15))
-                                    }
-                                    .padding()
-                                }
-                                
-                                // Search button with gradient and animation
-                                Button(action: searchRides) {
-                                    HStack {
-                                        Text("Find My Ride")
-                                            .font(.system(size: 18, weight: .bold))
-                                            .foregroundColor(AppColors.buttonText)
-                                        
-                                        Image(systemName: "magnifyingglass")
-                                            .font(.system(size: 16, weight: .bold))
-                                            .foregroundColor(AppColors.buttonText)
-                                            .padding(.leading, 4)
-                                    }
-                                    .padding(.vertical, 18)
-                                    .frame(maxWidth: .infinity)
-                                    .background(
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [AppColors.buttonBackground, AppColors.buttonBackground.opacity(0.8)]),
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
-                                    .cornerRadius(18)
-                                    .shadow(color: AppColors.buttonBackground.opacity(0.4), radius: 8, x: 0, y: 4)
-                                    .padding(.horizontal, 20)
-                                    .padding(.top, 5)
-                                }
-                                .disabled(origin.isEmpty || destination.isEmpty)
-                                .opacity(origin.isEmpty || destination.isEmpty ? 0.6 : 1.0)
-                                .padding(.bottom, 10)
-                            }
-                            .padding(.vertical, 25)
-                            .background(
-                                RoundedRectangle(cornerRadius: 24)
-                                    .fill(AppColors.background.opacity(0.5))
-                                    .shadow(color: Color.black.opacity(0.08), radius: 15, x: 0, y: 5)
-                            )
-                            .padding(.horizontal, 20)
-                            .padding(.top, 10)
-                            
-                            // Ride options showcase with cards
-                            VStack(alignment: .leading, spacing: 20) {
-                                // Section title
-                                Text("Travel Options")
+                                Text("Rideshare Benefits")
                                     .font(.system(size: 22, weight: .bold))
                                     .foregroundColor(AppColors.contentText)
-                                    .padding(.horizontal, 20)
-                                
-                                // Option cards in horizontal scroll
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 15) {
-                                        // Option 1
-                                        VStack(alignment: .leading, spacing: 12) {
-                                            ZStack {
-                                                Circle()
-                                                    .fill(AppColors.buttonBackground.opacity(0.2))
-                                                    .frame(width: 50, height: 50)
-                                                
-                                                Image(systemName: "car.fill")
-                                                    .font(.system(size: 22))
-                                                    .foregroundColor(AppColors.buttonBackground)
-                                            }
-                                            
-                                            Text("Choose Ride")
-                                                .font(.system(size: 16, weight: .semibold))
-                                                .foregroundColor(AppColors.contentText)
-                                            
-                                            Text("Select your preferred ride options")
-                                                .font(.system(size: 14))
-                                                .foregroundColor(AppColors.contentText.opacity(0.7))
-                                                .multilineTextAlignment(.leading)
-                                        }
-                                        .padding(.vertical, 20)
-                                        .padding(.horizontal, 20)
-                                        .frame(width: 180)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 20)
-                                                .fill(AppColors.buttonText)
-                                                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-                                        )
-                                        
-                                        // Option 2
-                                        VStack(alignment: .leading, spacing: 12) {
-                                            ZStack {
-                                                Circle()
-                                                    .fill(AppColors.buttonBackground.opacity(0.2))
-                                                    .frame(width: 50, height: 50)
-                                                
-                                                Image(systemName: "clock.fill")
-                                                    .font(.system(size: 22))
-                                                    .foregroundColor(AppColors.buttonBackground)
-                                            }
-                                            
-                                            Text("Best Time")
-                                                .font(.system(size: 16, weight: .semibold))
-                                                .foregroundColor(AppColors.contentText)
-                                            
-                                            Text("Select the best departure time")
-                                                .font(.system(size: 14))
-                                                .foregroundColor(AppColors.contentText.opacity(0.7))
-                                                .multilineTextAlignment(.leading)
-                                        }
-                                        .padding(.vertical, 20)
-                                        .padding(.horizontal, 20)
-                                        .frame(width: 180)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 20)
-                                                .fill(AppColors.buttonText)
-                                                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-                                        )
-                                        
-                                        // Option 3
-                                        VStack(alignment: .leading, spacing: 12) {
-                                            ZStack {
-                                                Circle()
-                                                    .fill(AppColors.buttonBackground.opacity(0.2))
-                                                    .frame(width: 50, height: 50)
-                                                
-                                                Image(systemName: "map.fill")
-                                                    .font(.system(size: 22))
-                                                    .foregroundColor(AppColors.buttonBackground)
-                                            }
-                                            
-                                            Text("Route Options")
-                                                .font(.system(size: 16, weight: .semibold))
-                                                .foregroundColor(AppColors.contentText)
-                                            
-                                            Text("Explore different route options")
-                                                .font(.system(size: 14))
-                                                .foregroundColor(AppColors.contentText.opacity(0.7))
-                                                .multilineTextAlignment(.leading)
-                                        }
-                                        .padding(.vertical, 20)
-                                        .padding(.horizontal, 20)
-                                        .frame(width: 180)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 20)
-                                                .fill(AppColors.buttonText)
-                                                .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 5)
-                                        )
-                                    }
-                                    .padding(.horizontal, 20)
-                                }
                             }
+                            .padding(.leading, 20)
                             .padding(.top, 10)
-                            .padding(.bottom, 80) // Add padding for tab bar
+                            
+                            // Benefit cards
+                            BenefitCard(
+                                icon: "dollarsign.circle.fill",
+                                title: "Save on Travel Costs",
+                                description: "Split expenses with other riders and reduce your commuting costs",
+                                color: Color(hex: "#FFA500")
+                            )
+                            
+                            BenefitCard(
+                                icon: "leaf.fill",
+                                title: "Eco-Friendly Travel",
+                                description: "Reduce your carbon footprint by sharing rides with others",
+                                color: Color(hex: "#4CAF50")
+                            )
+                            
+                            BenefitCard(
+                                icon: "person.2.fill",
+                                title: "Meet New People",
+                                description: "Connect with others going your way and expand your network",
+                                color: Color(hex: "#2196F3")
+                            )
+                            
+                            // Popular Routes section
+                            HStack {
+                                Text("Popular Routes")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .foregroundColor(AppColors.contentText)
+                                
+                                Spacer()
+                                
+                                Text("See All")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(AppColors.buttonBackground)
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.top, 15)
                         }
+                        
+                        Spacer()
+                            .frame(height: 80) // Space for tab bar
                     }
                 }
             }
+            
+            // We're not including the tab bar here as it should be managed by parent view
         }
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $showingSearchResults) {
             SearchResultsView(searchQuery: searchQuery, origin: origin, destination: destination, date: date)
         }
         .sheet(isPresented: $showDatePicker) {
-            // Modern date picker sheet
-            VStack(spacing: 20) {
-                // Header
-                HStack {
-                    Text("Select Travel Date")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(AppColors.contentText)
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        showDatePicker = false
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(AppColors.contentText.opacity(0.6))
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 20)
-                
-                // Date Picker
-                DatePicker("", selection: $date, displayedComponents: .date)
-                    .labelsHidden()
-                    .datePickerStyle(GraphicalDatePickerStyle())
-                    .padding(.horizontal, 20)
-                
-                // Confirm button
-                Button(action: {
-                    showDatePicker = false
-                }) {
-                    Text("Confirm Date")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(AppColors.buttonText)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [AppColors.buttonBackground, AppColors.buttonBackground.opacity(0.8)]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(16)
-                        .shadow(color: AppColors.buttonBackground.opacity(0.3), radius: 8, x: 0, y: 4)
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 30)
-            }
-            .background(AppColors.background)
-            .cornerRadius(25)
+            DatePickerSheet(date: $date, showDatePicker: $showDatePicker)
         }
     }
     
+    // Helper functions
     private func searchRides() {
         isLoading = true
         errorMessage = nil
@@ -726,7 +478,7 @@ struct SearchView: View {
             }
         }
     }
-
+    
     private func dateFormatter(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, yyyy"
@@ -734,55 +486,313 @@ struct SearchView: View {
     }
 }
 
-// Enhanced wave shape for more fluid appearance
-struct WaveShape: Shape {
-    var amplitude: CGFloat
-    var frequency: CGFloat
-    
-    func path(in rect: CGRect) -> Path {
-        let width = rect.width
-        let height = rect.height
-        let midHeight = height * 0.8
-        let wavesHeight = height * 0.2
-        
-        var path = Path()
-        path.move(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: width, y: 0))
-        path.addLine(to: CGPoint(x: width, y: midHeight))
-        
-        // Create a more natural wave pattern
-        var x: CGFloat = 0
-        let waveSegments = 5
-        let dx = width / CGFloat(waveSegments)
-        
-        path.move(to: CGPoint(x: width, y: midHeight))
-        
-        for i in 0...waveSegments {
-            x = width - CGFloat(i) * dx
-            let y = midHeight + sin(CGFloat(i) * frequency) * amplitude
+// MARK: - Header View
+struct HeaderView: View {
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            // Orange background
+            Rectangle()
+                .fill(AppColors.buttonBackground)
+                .frame(height: 220)
             
-            if i == 0 {
-                path.move(to: CGPoint(x: x, y: y))
-            } else {
-                let prevX = width - CGFloat(i-1) * dx
-                let prevY = midHeight + sin(CGFloat(i-1) * frequency) * amplitude
-                
-                let controlX1 = prevX - dx * 0.4
-                let controlY1 = prevY
-                let controlX2 = x + dx * 0.4
-                let controlY2 = y
-                
-                path.addCurve(
-                    to: CGPoint(x: x, y: y),
-                    control1: CGPoint(x: controlX1, y: controlY1),
-                    control2: CGPoint(x: controlX2, y: controlY2)
-                )
+            // Wave overlay
+            WaveShape()
+                .fill(AppColors.background)
+                .frame(height: 80)
+                .offset(y: 40)
+            
+            // Content - Perfect Ride title
+            VStack {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Perfect")
+                            .font(.system(size: 48, weight: .bold))
+                            .foregroundColor(.white)
+                            .opacity(0.7)
+                        
+                        Text("Ride")
+                            .font(.system(size: 60, weight: .heavy))
+                            .foregroundColor(.white)
+                            .offset(y: -10)
+                    }
+                    .padding(.leading, 20)
+                    
+                    Spacer()
+                    
+                    // Icon
+                    ZStack {
+                        Circle()
+                            .fill(Color.white.opacity(0.2))
+                            .frame(width: 50, height: 50)
+                        
+                        Image(systemName: "figure.walk")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                    }
+                    .padding(.trailing, 30)
+                }
+                .padding(.top, 60) // Adjust for status bar
+                .padding(.bottom, 60) // Position above the wave
             }
         }
+    }
+}
+
+// MARK: - Wave Shape
+struct WaveShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let width = rect.width
+        let height = rect.height
         
-        path.addLine(to: CGPoint(x: 0, y: midHeight))
-        path.addLine(to: CGPoint(x: 0, y: 0))
+        // Start at top left
+        path.move(to: CGPoint(x: 0, y: 0))
+        
+        // Go to top right
+        path.addLine(to: CGPoint(x: width, y: 0))
+        
+        // Go to bottom right
+        path.addLine(to: CGPoint(x: width, y: height))
+        
+        // Create wave
+        path.addCurve(
+            to: CGPoint(x: 0, y: height),
+            control1: CGPoint(x: width * 0.75, y: height * 0.5),
+            control2: CGPoint(x: width * 0.25, y: height * 0.8)
+        )
+        
+        // Close path
+        path.closeSubpath()
         
         return path
     }
+}
+
+// MARK: - Search Card
+struct SearchCard: View {
+    @Binding var origin: String
+    @Binding var destination: String
+    @Binding var date: Date
+    @Binding var showDatePicker: Bool
+    @Binding var isLoading: Bool
+    @Binding var errorMessage: String?
+    
+    var searchRides: () -> Void
+    var dateFormatter: (Date) -> String
+    
+    var body: some View {
+        VStack(spacing: 15) {
+            // Input fields
+            InputField(
+                text: $origin,
+                placeholder: "Where from?",
+                icon: "arrow.up.circle.fill"
+            )
+            
+            // Route connector
+            HStack {
+                Circle()
+                    .fill(AppColors.buttonBackground)
+                    .frame(width: 5, height: 5)
+                    .padding(.leading, 36)
+                
+                Spacer()
+            }
+            
+            InputField(
+                text: $destination,
+                placeholder: "Where to?",
+                icon: "mappin.circle.fill"
+            )
+            
+            // Date picker button
+            Button(action: {
+                showDatePicker.toggle()
+            }) {
+                HStack {
+                    ZStack {
+                        Circle()
+                            .fill(AppColors.buttonBackground.opacity(0.2))
+                            .frame(width: 36, height: 36)
+                        
+                        Image(systemName: "calendar")
+                            .foregroundColor(AppColors.buttonBackground)
+                    }
+                    .padding(.leading, 16)
+                    
+                    Text(dateFormatter(date))
+                        .foregroundColor(AppColors.contentText)
+                        .font(.system(size: 16))
+                        .padding(.leading, 10)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.down.circle.fill")
+                        .foregroundColor(AppColors.buttonBackground)
+                        .padding(.trailing, 16)
+                }
+                .padding(.vertical, 12)
+                .background(Color.white)
+                .cornerRadius(25)
+                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+            }
+            
+            // Error message if present
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .font(.footnote)
+                    .padding(.top, 5)
+            }
+            
+            // Loading indicator
+            if isLoading {
+                ProgressView("Searching for rides...")
+                    .padding(.vertical, 10)
+            }
+            
+            // Search button
+            Button(action: searchRides) {
+                HStack {
+                    Text("Find Rides")
+                        .foregroundColor(.white)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                    
+                    Image(systemName: "arrow.right")
+                        .foregroundColor(.white)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color.lightGray)
+                .cornerRadius(25)
+                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+            }
+            .disabled(origin.isEmpty || destination.isEmpty)
+            .opacity(origin.isEmpty || destination.isEmpty ? 0.6 : 1.0)
+        }
+        .padding(20)
+        .background(Color.white)
+        .cornerRadius(25)
+        .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+    }
+}
+
+// MARK: - Input Field
+struct InputField: View {
+    @Binding var text: String
+    var placeholder: String
+    var icon: String
+    
+    var body: some View {
+        HStack {
+            ZStack {
+                Circle()
+                    .fill(AppColors.buttonBackground.opacity(0.2))
+                    .frame(width: 36, height: 36)
+                
+                Image(systemName: icon)
+                    .foregroundColor(AppColors.buttonBackground)
+            }
+            .padding(.leading, 16)
+            
+            TextField(placeholder, text: $text)
+                .padding(.leading, 10)
+                .foregroundColor(AppColors.contentText)
+            
+            Spacer()
+        }
+        .padding(.vertical, 12)
+        .background(Color.white)
+        .cornerRadius(25)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
+}
+
+// MARK: - Benefit Card
+struct BenefitCard: View {
+    var icon: String
+    var title: String
+    var description: String
+    var color: Color
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 15) {
+            // Icon
+            ZStack {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(color)
+                    .frame(width: 60, height: 60)
+                
+                Image(systemName: icon)
+                    .font(.system(size: 24))
+                    .foregroundColor(.white)
+            }
+            
+            // Text content
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(AppColors.contentText)
+                
+                Text(description)
+                    .font(.system(size: 14))
+                    .foregroundColor(Color.gray)
+                    .lineLimit(2)
+            }
+            
+            Spacer()
+        }
+        .padding(.vertical, 15)
+        .padding(.horizontal, 20)
+        .background(Color.white)
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .padding(.horizontal, 20)
+    }
+}
+
+// MARK: - Date Picker Sheet
+struct DatePickerSheet: View {
+    @Binding var date: Date
+    @Binding var showDatePicker: Bool
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            // Handle indicator
+            RoundedRectangle(cornerRadius: 2.5)
+                .fill(Color.gray.opacity(0.3))
+                .frame(width: 40, height: 5)
+                .padding(.top, 8)
+            
+            Text("Select a Date")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(AppColors.contentText)
+                .padding()
+            
+            DatePicker("", selection: $date, displayedComponents: .date)
+                .labelsHidden()
+                .datePickerStyle(GraphicalDatePickerStyle())
+                .padding()
+            
+            Button("Done") {
+                showDatePicker = false
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(AppColors.buttonBackground)
+            .foregroundColor(.white)
+            .cornerRadius(25)
+            .padding(.horizontal)
+            .padding(.bottom, 30)
+        }
+        .background(AppColors.background)
+        .cornerRadius(20)
+    }
+}
+
+// MARK: - Light Gray Color Extension
+extension Color {
+    static let lightGray = Color(UIColor.lightGray)
 }
