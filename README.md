@@ -1,10 +1,6 @@
 # 🚗 RouteShare 
 
 <p align="center">
-  <img src="https://via.placeholder.com/150" alt="RouteShare Logo" width="150" height="150">
-</p>
-
-<p align="center">
   <b>Intercity Ride-Sharing Application</b><br>
   <i>Connect drivers with passengers traveling along the same route</i>
 </p>
